@@ -1,0 +1,108 @@
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+typedef struct node
+{
+  int value;
+  struct node* left;
+  struct node* right;
+} Node;
+
+typedef struct tree
+{
+  Node* root;
+} Tree;
+
+Node* newNode(int value)
+{
+  Node* node = (Node*)malloc(sizeof(Node));
+  node->left  = NULL;
+  node->right = NULL;
+  node->value = value;
+  return node;
+}
+
+Tree* newTree(int value)
+{
+  Tree* tree = (Tree*)malloc(sizeof(Tree));
+  tree->root = newNode(value);
+  return tree;
+}
+
+void insert(Node* root, int value)
+{
+  if (root->value < value)
+  {
+	if (root->right)
+	{
+	  insert(root->right, value);
+	} else {
+	  root->right = newNode(value);
+	  return;
+	}
+  }
+  if (root->value > value)
+  {
+	if (root->left)
+	{
+	  insert(root->left, value);
+	} else {
+	  root->left = newNode(value);
+	  return;
+	}
+  }
+  return;
+}
+
+//Printa os numeros na ordem;
+void inorder(Node* root)
+{
+  if (root)
+  {
+	inorder(root->left);
+	cout << root->value << endl;
+	inorder(root->right);
+  }
+}
+
+//Vai printar da esquerda pra direita de cima pra baixo
+void preorder(Node* root)
+{
+  if (root)
+  {
+	cout << root->value << endl;
+	preorder(root->left);
+	preorder(root->right);
+  }
+}
+
+//Printa da esquerda pra direita de baixo pra cima
+void postorder(Node* root)
+{
+  if (root)
+  {
+	postorder(root->left);
+	postorder(root->right);
+	cout << root->value << endl;
+  }
+}
+  
+int main()
+{
+  Tree* tree = newTree(5);
+  insert(tree->root, 7);
+  insert(tree->root, 3);
+  insert(tree->root, 6);
+  insert(tree->root, 4);
+  insert(tree->root, 8);
+  insert(tree->root, 2);
+
+  postorder(tree->root);
+  cout << " " << endl;
+  preorder(tree->root);
+  cout << " " << endl;
+  inorder(tree->root);
+  return 0;
+}
