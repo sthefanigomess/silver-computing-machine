@@ -3,19 +3,19 @@
 
 using namespace std;
 
-typedef struct node
+typedef struct node  //Crio uma estrutura para cada nó da arvore. Semeliante a uma lista ligada, mas com um nó para a esquerda e outro para direita.
 {
   int value;
   struct node* left;
   struct node* right;
 } Node;
 
-typedef struct tree
+typedef struct tree //Por conveniência vou criar uma pra arvore tambem.
 {
   Node* root;
 } Tree;
 
-Node* newNode(int value)
+Node* newNode(int value) //Essa função serve para criar novos nós para não ter que alocar manualmente a memória sempre que se quiser fazer um novo nó.
 {
   Node* node = (Node*)malloc(sizeof(Node));
   node->left  = NULL;
@@ -24,39 +24,47 @@ Node* newNode(int value)
   return node;
 }
 
-Tree* newTree(int value)
+Tree* newTree(int value) //O mesmo pra arvore.
 {
   Tree* tree = (Tree*)malloc(sizeof(Tree));
   tree->root = newNode(value);
   return tree;
 }
 
-void insert(Node* root, int value)
+//A função de inserir é o que define essa arvore como uma arvore de procura
+//binária. que consiste em ter os nos ordenados conforme seu tamanho, da esquerda
+//para a direita
+void insert(Node* root, int value) //eu passo o nó em que eu quero adicionar um filho e o valor que eu desejo adicionar nesse filho.
 {
-  if (root->value < value)
+  if (root->value < value) //verifico se esse nó pai é tem um valor associado menor que o que passei na função.
   {
-	if (root->right)
+	if (root->right) //se tiver eu verifico se a direita desse nó pai é nula
 	{
-	  insert(root->right, value);
+	  insert(root->right, value); //se não for, eu chamo recursivamente a função no nó da direita.
 	} else {
-	  root->right = newNode(value);
+	  root->right = newNode(value); //se for eu simplesmente coloco o valor nesse nó filho a direita e retorno
 	  return;
 	}
   }
-  if (root->value > value)
+  if (root->value > value) //Faço o mesmo proceso para o nó esquerda, caso o valor associado ao nó seja menor do que o do nó pai
   {
-	if (root->left)
+	if (root->left) //Se o nó filho a esquerda não for nulo, eu chamo recursivamente a função nesse nó.
 	{
 	  insert(root->left, value);
 	} else {
-	  root->left = newNode(value);
+	  root->left = newNode(value); //caso seja nulo, eu so coloco o valor nele e retorno.
 	  return;
 	}
   }
-  return;
+  return; //Caso nenhuma desses coisas aconteça, (o valor passado ja existe na arvore) ela simplesmente retorna sem fazer nada.
 }
 
 //Printa os numeros na ordem;
+//Nos casos das funções de mostrar a arvore
+//a "em order" ou "ordem central" printa a arvore exatamente na sequencia
+//da esquerda para a direita, como se fosse uma lista ligada linear.
+//no caso de uma arvore de busca binária os numeros estarão ordenados do menor
+//para o maior.
 void inorder(Node* root)
 {
   if (root)
@@ -68,6 +76,8 @@ void inorder(Node* root)
 }
 
 //Vai printar da esquerda pra direita de cima pra baixo
+//No caso da pre ordem ele printa os numeros de cima para baixo, da esquerda
+//para a direita, indo da raiz até as folhas da arvore
 void preorder(Node* root)
 {
   if (root)
@@ -79,6 +89,8 @@ void preorder(Node* root)
 }
 
 //Printa da esquerda pra direita de baixo pra cima
+//A pos ordem por outro lado printa das fohas até a raiz, de baixo
+//para cima, tambem da esquerda para a direita.
 void postorder(Node* root)
 {
   if (root)
@@ -88,21 +100,27 @@ void postorder(Node* root)
 	cout << root->value << endl;
   }
 }
+
+//Todas elas são feitas usando recursão e so mudam na ordem das chamadas
+//a pre ordem com a função de print no começo, a central no meio, e a pos
+//no fim. O que faz elas terem o comportamento diferente é a forma como
+//elas se desempilham na stack
   
 int main()
 {
-  Tree* tree = newTree(5);
-  insert(tree->root, 7);
+  Tree* tree = newTree(5); //Aqui so estou criando uma nova arvore elas
+  insert(tree->root, 7);   //refazendo essa da imagem.
   insert(tree->root, 3);
   insert(tree->root, 6);
   insert(tree->root, 4);
   insert(tree->root, 8);
   insert(tree->root, 2);
 
-  postorder(tree->root);
-  cout << " " << endl;
+  //E aqui eu mostro as 3 formas.
   preorder(tree->root);
-  cout << " " << endl;
+  cout << "" << endl;
   inorder(tree->root);
+  cout << "" << endl;
+  postorder(tree->root);
   return 0;
 }
